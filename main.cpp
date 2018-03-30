@@ -93,6 +93,8 @@ public:
     void initializeaza();
     void sterge(int);
     void elimina(int);
+    string gata();
+    string REG();
 };
 automat::automat()
 {
@@ -167,7 +169,7 @@ ostream& operator<<(ostream &out,automat &A)
 {
     int i;
     list <tranzitie>::iterator it;
-    out<<A.n<<' '<<A.qs<<' '<<A.qf<<'\n';
+    out<<A.n+1<<' '<<A.qs<<' '<<A.qf<<'\n';
     for (i=0;i<=A.n;i++)
     {
         for (it=A.Q[i].begin();it!=A.Q[i].end();it++)
@@ -239,8 +241,7 @@ void automat::elimina(int x)
     vector <tranzitie> ies;
     list <tranzitie>::iterator it;
     tranzitie A,B,C;
-    int i,j;
-    bool ok;
+    unsigned int i,j;
     for (it=Q[x].begin();it!=Q[x].end();it++)
     {
         A=*it;
@@ -281,7 +282,7 @@ void automat::elimina(int x)
             C.set_urm(B.get_urm());
             C.set_s(nou);
             C.set_sens(1);
-            x=A.get_urm();ok=true;
+            x=A.get_urm();
             adauga(x,C);
             //(A.urm,B.urm) cu stringul nou
         }
@@ -290,21 +291,35 @@ void automat::elimina(int x)
     bucla.clear();
     ies.clear();
 }
+string automat::gata()
+{
+    string ss="";
+    list <tranzitie>::iterator it;
+    for (it=Q[qs].begin();it!=Q[qs].end();it++)
+    {
+        ss=ss+"("+(*it).get_s()+") + ";
+    }
+    int i=ss.size();
+    ss.replace(i-3,i-3,"");
+    return ss;
+}
+string automat::REG()
+{
+    initializeaza();
+    int i;
+    for (i=0;i<=n;i++)
+        if ( i!=qs && i!=qf )
+            elimina(i);
+    return gata();
+}
 int main()
 {
     ifstream fin("conversie.in");
     ofstream fout("conversie.out");
     automat A;
     fin>>A;
-    A.initializeaza();
-    A.elimina(0);
-    A.elimina(1);
-    A.elimina(2);
-    A.elimina(3);
-    A.elimina(5);
-    A.elimina(4);
-    //string s=A.gata();
-    fout<<A;
+    automat B(A);
+    fout<<A.REG()<<'\n'<<B;
     fin.close();
     fout.close();
     return 0;
