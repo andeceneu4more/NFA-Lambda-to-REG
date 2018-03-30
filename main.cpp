@@ -297,7 +297,8 @@ string automat::gata()
     list <tranzitie>::iterator it;
     for (it=Q[qs].begin();it!=Q[qs].end();it++)
     {
-        ss=ss+"("+(*it).get_s()+") + ";
+        if ((*it).get_s()!="#")
+            ss=ss+"("+(*it).get_s()+") + ";
     }
     int i=ss.size();
     ss.replace(i-3,i-3,"");
@@ -319,7 +320,8 @@ int main()
     automat A;
     fin>>A;
     automat B(A);
-    fout<<A.REG()<<'\n'<<B;
+    fout<<A.REG()<<'\n';
+    //fout<<B;
     fin.close();
     fout.close();
     return 0;
