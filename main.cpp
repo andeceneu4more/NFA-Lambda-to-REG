@@ -140,7 +140,7 @@ istream& operator>>(istream& in, automat& A)
     in>>A.n;
     A.n--;
     in.ignore();
-    in>>s;
+    getline(in,s);
     //alfabetul
     in>>A.qs;
     in>>F;
@@ -237,7 +237,6 @@ void automat::elimina(int x)
 {
     string rkk="",nou;
     vector <tranzitie> intra;
-    vector <tranzitie> bucla;
     vector <tranzitie> ies;
     list <tranzitie>::iterator it;
     tranzitie A,B,C;
@@ -247,7 +246,6 @@ void automat::elimina(int x)
         A=*it;
         if (A.get_urm()==x)
         {
-            bucla.push_back(A);
             if ( A.get_s()!="#" && A.get_sens()==1 )
                     rkk+=(A.get_s()+" + ");
         }
@@ -263,8 +261,17 @@ void automat::elimina(int x)
     if (rkk.size())
     {
         j=rkk.size();
-        rkk.replace(j-3,j-3,"");
-        rkk=" ( "+rkk+" )* ";
+        if (j>4)
+        {
+            rkk.replace(j-3,j-3,"");
+            rkk=" ( "+rkk+" )* ";
+        }
+        else
+        {
+            rkk.replace(j-3,j-3,"* ");
+            j=rkk.size();
+            rkk.replace(j-3,j-3,"");
+        }
     }
     else
         rkk=" ";
@@ -288,7 +295,6 @@ void automat::elimina(int x)
         }
     }
     intra.clear();
-    bucla.clear();
     ies.clear();
 }
 string automat::gata()
@@ -298,7 +304,8 @@ string automat::gata()
     for (it=Q[qs].begin();it!=Q[qs].end();it++)
     {
         if ((*it).get_s()!="#")
-            ss=ss+"("+(*it).get_s()+") + ";
+            if ((*it).get_sens()==1)
+                ss=ss+"("+(*it).get_s()+") + ";
     }
     int i=ss.size();
     ss.replace(i-3,i-3,"");
