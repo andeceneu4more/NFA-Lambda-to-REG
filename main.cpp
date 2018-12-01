@@ -66,12 +66,12 @@ void tranzitie::set_sens(int ssens)
 }
 istream& operator>>(istream &in,  tranzitie &T)
 {
-    in>>T.urm>>T.s; 
+    in >> T.urm >> T.s; 
     return in; 
 }
 ostream& operator<<(ostream &out,  tranzitie &T)
 {
-    out<<T.urm<<' '<<T.sens<<' '<<T.s; 
+    out << T.urm << ' ' << T.sens << ' ' << T.s; 
     return out; 
 }
 bool operator==(const tranzitie &A, const tranzitie &B)
@@ -137,30 +137,30 @@ istream& operator>>(istream& in,  automat& A)
     int F, i, x, m; 
     list <tranzitie>::iterator it; 
     tranzitie T("#"); 
-    in>>A.n; 
+    in >> A.n; 
     A.n--; 
     in.ignore(); 
     getline(in, s); 
     //alfabetul
-    in>>A.qs; 
-    in>>F; 
+    in >> A.qs; 
+    in >> F; 
     if (F != 1)
     {
         A.qf = ++A.n; 
-        //n+1 = noua si singura stare finala
+        //n + 1 = noua si singura stare finala
         T.set_urm(A.qf); 
         for (i = 1; i <= F; i++)
         {
-            in>>x; 
+            in >> x; 
             A.adauga(x, T); 
         }
     }
     else
-        in>>A.qf; 
-    in>>m; 
+        in >> A.qf; 
+    in >> m; 
     for (i = 1; i <= m; i++)
     {
-        in>>x>>T; 
+        in >> x >> T; 
         A.adauga(x, T); 
     }
     return in; 
@@ -169,12 +169,12 @@ ostream& operator<<(ostream &out, automat &A)
 {
     int i; 
     list <tranzitie>::iterator it; 
-    out<<A.n+1<<' '<<A.qs<<' '<<A.qf<<'\n'; 
+    out << A.n + 1 << ' ' << A.qs << ' ' << A.qf << '\n'; 
     for (i = 0; i <= A.n; i++)
     {
         for (it = A.Q[i].begin(); it != A.Q[i].end(); it++)
         {
-            out<<i<<' '<<(*it)<<'\n'; 
+            out << i << ' ' << (*it) << '\n'; 
         }
     }
     return out; 
@@ -186,9 +186,9 @@ void automat::initializeaza()
     tranzitie T("#"); 
     //in starea initiala nu intra nimeni
     ok = true; 
-    for (it = Q[qs].begin(); it != Q[qs].end()&&ok; it++)
+    for (it = Q[qs].begin(); it != Q[qs].end() && ok; it++)
     {
-        if ((*it).get_sens() == -1)
+        if (it->get_sens() == -1)
             ok = false; 
     }
     if (!ok)
@@ -201,9 +201,9 @@ void automat::initializeaza()
     }
     //din starea finala nu iese nimeni
     ok = true; 
-    for (it = Q[qf].begin(); it != Q[qf].end()&&ok; it++)
+    for (it = Q[qf].begin(); it != Q[qf].end() && ok; it++)
     {
-        if ((*it).get_sens() == 1)
+        if (it->get_sens() == 1)
             ok = false;  
     }
     if (!ok)
@@ -222,12 +222,12 @@ void automat::sterge(int x)
     tranzitie A;  
     for (it = Q[x].begin();  it != Q[x].end();  it++)
     {
-        y = (*it).get_urm(); 
+        y = it->get_urm(); 
         if (y != x)
         {
             A.set_urm(x); 
-            A.set_sens(-(*it).get_sens()); 
-            A.set_s((*it).get_s()); 
+            A.set_sens(-it->get_sens()); 
+            A.set_s(it->get_s()); 
             Q[y].remove(A); 
         }
     }
@@ -247,7 +247,7 @@ void automat::elimina(int x)
         if (A.get_urm() == x)
         {
             if ( A.get_s() != "#" && A.get_sens() == 1 )
-                    rkk += (A.get_s()+" + "); 
+                    rkk += (A.get_s() + "  +  "); 
         }
         else
         {
@@ -264,7 +264,7 @@ void automat::elimina(int x)
         if (j>4)
         {
             rkk.replace(j-3, j-3, ""); 
-            rkk = " ( "+rkk+" )* "; 
+            rkk = " ( " + rkk + " )* "; 
         }
         else
         {
@@ -285,7 +285,7 @@ void automat::elimina(int x)
             B = ies[j]; 
             if (B.get_s() == "#")
                 B.set_s(""); 
-            nou = A.get_s()+rkk+B.get_s(); 
+            nou = A.get_s() + rkk + B.get_s(); 
             C.set_urm(B.get_urm()); 
             C.set_s(nou); 
             C.set_sens(1); 
@@ -303,9 +303,9 @@ string automat::gata()
     list <tranzitie>::iterator it; 
     for (it = Q[qs].begin(); it != Q[qs].end(); it++)
     {
-        if ((*it).get_s() != "#")
-            if ((*it).get_sens() == 1)
-                ss = ss+"("+(*it).get_s()+") + "; 
+        if (it->get_s() != "#")
+            if (it->get_sens() == 1)
+                ss = ss + "(" + it->get_s() + ")  +  "; 
     }
     int i = ss.size(); 
     ss.replace(i-3, i-3, ""); 
@@ -325,10 +325,10 @@ int main()
     ifstream fin("conversie.in"); 
     ofstream fout("conversie.out"); 
     automat A; 
-    fin>>A; 
+    fin >> A; 
     automat B(A); 
-    fout<<A.REG()<<'\n'; 
-    //fout<<B; 
+    fout << A.REG() << '\n'; 
+    //fout << B; 
     fin.close(); 
     fout.close(); 
     return 0; 
